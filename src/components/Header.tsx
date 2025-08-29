@@ -2,14 +2,15 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { User, LogOut } from 'lucide-react';
+import { User, LogOut, Settings, Shield } from 'lucide-react';
+import { User as UserType } from '@/types';
 
 interface HeaderProps {
   activeTab: string;
   setActiveTab: (tab: string) => void;
   setShowModal: (show: boolean) => void;
   isAuthenticated: boolean;
-  user: any;
+  user: UserType | null;
   onLogout: () => void;
 }
 
@@ -27,6 +28,14 @@ const Header: React.FC<HeaderProps> = ({
     { id: 'anexos', label: 'Anexos' },
   ];
 
+  const canAccess = (requiredRole: string) => {
+    if (!user) return false;
+    const roleHierarchy = { viewer: 1, editor: 2, admin: 3 };
+    const userLevel = roleHierarchy[user.role as keyof typeof roleHierarchy] || 0;
+    const requiredLevel = roleHierarchy[requiredRole as keyof typeof roleHierarchy] || 0;
+    return userLevel >= requiredLevel;
+  };
+
   return (
     <motion.header
       initial={{ y: -100 }}
@@ -37,6 +46,7 @@ const Header: React.FC<HeaderProps> = ({
         <motion.div
           whileHover={{ scale: 1.05 }}
           className="cursor-pointer"
+          onClick={() => window.location.href = '/'}
         >
           <h1 className="text-3xl font-bold text-blue-800 italic">Leterago</h1>
           <p className="text-xs text-gray-600">
@@ -69,9 +79,42 @@ const Header: React.FC<HeaderProps> = ({
 
           {isAuthenticated ? (
             <div className="flex items-center gap-4">
+              {/* Indicador de rol */}
+              <div className="flex items-center gap-2 text-sm">
+                <Shield 
+                  size={16} 
+                  className={`${
+                    user?.role === 'admin' ? 'text-red-500' : 
+                    user?.role === 'editor' ? 'text-orange-500' : 
+                    'text-green-500'
+                  }`}
+                />
+                <span className={`font-medium capitalize ${
+                  user?.role === 'admin' ? 'text-red-600' : 
+                  user?.role === 'editor' ? 'text-orange-600' : 
+                  'text-green-600'
+                }`}>
+                  {user?.role}
+                </span>
+              </div>
+
+              {/* Botón de administración */}
+              {canAccess('editor') && (
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => window.location.href = '/admin'}
+                  className="flex items-center gap-2 bg-purple-600 text-white px-4 py-2 rounded-full hover:bg-purple-700 transition-colors text-sm"
+                >
+                  <Settings size={16} />
+                  Admin
+                </motion.button>
+              )}
+
               <span className="text-sm text-gray-600">
-                Bienvenido, {user?.username || user?.name}
+                {user?.username}
               </span>
+
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}

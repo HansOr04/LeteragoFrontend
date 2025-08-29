@@ -49,6 +49,7 @@ export default function Home() {
       setLoading(true);
       const response = await apiService.getCategories();
       setCategories(response.categories || []);
+      console.log('Categorías cargadas:', response.categories); // Debug
     } catch (error) {
       console.error('Error cargando categorías:', error);
     } finally {
@@ -60,6 +61,7 @@ export default function Home() {
     try {
       const response = await apiService.getTechniques();
       setTechniques(response.techniques || []);
+      console.log('Técnicas cargadas:', response.techniques); // Debug
     } catch (error) {
       console.error('Error cargando técnicas:', error);
     }
@@ -85,33 +87,83 @@ export default function Home() {
     localStorage.removeItem('token');
   };
 
-  // Filtrar categorías por tab
+  // Filtrar categorías por tab - MEJORADO
+  // Filtrar categorías por tab - CORREGIDO DEFINITIVAMENTE
   const getCategoriesForTab = (tab: string): Category[] => {
+    console.log(`Filtrando categorías para tab: ${tab}`);
+    console.log('Todas las categorías:', categories);
+    
     const tabMappings: Record<string, string[]> = {
       normas: [
-        'Organización y contexto',
-        'Liderazgo', 
-        'Planificación',
-        'Soporte',
-        'Operación',
-        'Evolución desempeño',
-        'Mejoras'
+        // Coincidencias exactas primero
+        'organización y contexto',
+        'liderazgo',
+        'planificación', 
+        'soporte',
+        'operación',
+        'evolución desempeño',
+        'mejoras',
+        // Palabras individuales como respaldo
+        'organización',
+        'contexto',
+        'liderazgo',
+        'planificacion',
+        'soporte',
+        'operacion',
+        'evolucion',
+        'desempeño',
+        'mejoras'
       ],
-      arquitectura: ['Security Operations Center'],
+      arquitectura: [
+        'security operations center',
+        'soc',
+        'arquitectura',
+        'security',
+        'operations', 
+        'center'
+      ],
       anexos: [
-        'Controles Organizacionales',
-        'Controles de Personas',
-        'Controles Físicos',
-        'Controles Tecnológicos'
+        'controles organizacionales',
+        'controles de personas', 
+        'controles físicos',
+        'controles tecnológicos',
+        'controles',
+        'organizacionales',
+        'personas',
+        'físicos',
+        'fisicos',
+        'tecnológicos',
+        'tecnologicos'
       ]
     };
 
-    return categories.filter((cat: Category) => 
-      tabMappings[tab]?.some((mapped: string) => 
-        cat.name.toLowerCase().includes(mapped.toLowerCase()) ||
-        mapped.toLowerCase().includes(cat.name.toLowerCase())
-      )
-    );
+    const keywords = tabMappings[tab] || [];
+    
+    const filteredCategories = categories.filter((cat: Category) => {
+      const categoryName = cat.name.toLowerCase().trim();
+      console.log(`Evaluando categoría: "${categoryName}" para tab: ${tab}`);
+      
+      // Primero buscar coincidencias exactas o muy cercanas
+      const exactMatch = keywords.some((keyword: string) => {
+        const keywordLower = keyword.toLowerCase().trim();
+        return categoryName === keywordLower || 
+               categoryName.includes(keywordLower) ||
+               keywordLower.includes(categoryName);
+      });
+      
+      // Si no hay coincidencia exacta, buscar palabras individuales
+      const wordMatch = !exactMatch && keywords.some((keyword: string) => {
+        const words = keyword.toLowerCase().split(' ');
+        return words.some(word => categoryName.includes(word.trim()));
+      });
+      
+      const matches = exactMatch || wordMatch;
+      console.log(`¿Coincide "${categoryName}" con ${tab}?`, matches);
+      return matches;
+    });
+    
+    console.log(`Categorías filtradas para ${tab}:`, filteredCategories);
+    return filteredCategories;
   };
 
   return (
