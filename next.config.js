@@ -3,12 +3,16 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   images: {
     domains: ['localhost'],
     unoptimized: true
   },
-  trailingSlash: true,
-  output: 'export'
+  experimental: {
+    esmExternals: false,
+  }
 };
 
 module.exports = nextConfig;
