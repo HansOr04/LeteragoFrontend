@@ -1,3 +1,48 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Reset forzado para anular variables externas */
+* {
+  margin: 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+}
+
+html, body {
+  height: 100% !important;
+  background: transparent !important;
+  color: inherit !important;
+}
+
+/* Anular todas las variables lt- */
+:root {
+  --lt-color-gray-100: initial !important;
+  --lt-color-gray-200: initial !important;
+  --lt-color-gray-300: initial !important;
+  --lt-color-gray-400: initial !important;
+  --lt-color-gray-500: initial !important;
+  --lt-color-gray-600: initial !important;
+  --lt-color-gray-700: initial !important;
+  --lt-color-gray-800: initial !important;
+  --lt-color-gray-900: initial !important;
+  --lt-color-white: initial !important;
+  --lt-color-black: initial !important;
+  --lt-color-transparent: initial !important;
+  --lt-color-background-light: initial !important;
+  --lt-color-background-default: initial !important;
+  --lt-color-background-dark: initial !important;
+  --lt-color-border-light: initial !important;
+  --lt-color-border-default: initial !important;
+  --lt-color-border-dark: initial !important;
+  --lt-color-text-very-light: initial !important;
+  --lt-color-text-light: initial !important;
+  --lt-color-text-default: initial !important;
+  --lt-color-text-dark: initial !important;
+  --lt-color-overlay-default: initial !important;
+  --lt-color-overlay-dark: initial !important;
+  --lt-color-overlay-transparent: initial !important;
+  --lt-shadow-website-overlay: initial !important;
+  --lt-shadowDefault: initial !important;
+  --lt-shadowActive: initial !important;
+}
