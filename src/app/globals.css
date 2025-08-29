@@ -2,19 +2,57 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Reset forzado para anular variables externas */
+/* Base styles con reset más suave */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 * {
-  margin: 0 !important;
-  padding: 0 !important;
+  margin: 0;
+  padding: 0;
 }
 
-html, body {
-  height: 100% !important;
-  background: transparent !important;
-  color: inherit !important;
+html,
+body {
+  height: 100%;
+  background: transparent;
+  color: inherit;
 }
 
-/* Anular todas las variables lt- */
+body {
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+/* Anular variables externas específicas si es necesario */
 :root {
   --lt-color-gray-100: initial !important;
   --lt-color-gray-200: initial !important;
@@ -44,4 +82,33 @@ html, body {
   --lt-shadow-website-overlay: initial !important;
   --lt-shadowDefault: initial !important;
   --lt-shadowActive: initial !important;
+}
+
+/* Estilos personalizados para componentes específicos si es necesario */
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.animate-slide-in {
+  animation: slideIn 0.3s ease-out;
+}
+
+.animate-pulse-slow {
+  animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { 
+    transform: translateY(-10px); 
+    opacity: 0; 
+  }
+  to { 
+    transform: translateY(0); 
+    opacity: 1; 
+  }
 }
